@@ -4,7 +4,7 @@
 \input{kaadam_todo}
 \input{Figure/tikz/tikzinit}
 
-\title{Comparison of different PMSM motor models}
+\title{PMSM Motor Model for P-HIL Application}
 \author{Dávid Kiss}
 
 \institution{Department of Automation and Applied Informatics \\
@@ -12,7 +12,7 @@ Budapest University of Technology and Economics}
 
 \email{david.kiss@aut.bme.hu}
 
-\headerTitle{Comparison of different PMSM motor models \dots}
+\headerTitle{PMSM Motor Model for P-HIL Application \dots}
 \headerAuthor{Dávid Kiss}
 
 
@@ -20,7 +20,8 @@ Budapest University of Technology and Economics}
 \makeAutStyleTitle
 
 \begin{abstract}
-Electrical drive simulation is one of the key areas of the emerging trends in power electronics. There are many off-the-shelf solutions available on the market, even engineering tools, like Matlab/Simulink developed it's own solution for the problem in the Simscape Electrical toolbox. There are claims, the solutions from different suppliers are applicable for on-line (real-time) simulation, which is important in HIL\footnote{Hardware-in-the-Loop} and P-HIL\footnote{Power Hardeare-in-the-Loop} environments. This Paper focuses on the validation of the PMSM model provided by MATLAB/Simulink.
+Electrical drive simulation is one of the key areas of the emerging trends in power electronics. There are many off-the-shelf solutions available on the market, even engineering tools, like MATLAB/Simulink developed it's own solution for the problem in the Simscape Electrical toolbox. These Solutions however are not open for modification, limiting the field in which they can be used. For motor simulation purposes, different approach seem to be necessary. Real-time execution also crucial in case of HIL\footnote{Hardware-in-the-Loop} and P-HIL\footnote{Power Hardware-in-the-Loop} application.
+There are claims, the solutions from different suppliers are applicable for on-line simulation, aiming for HIL and P-HIL environments. This Paper introduces a custom developed motor model, usable for motor emulation and compares it with the PMSM model provided by MATLAB/Simulink.
 \end{abstract}
 
 
@@ -33,6 +34,8 @@ format)
 
 \section{Introduction}
 \label{sec:Introdu}
+
+
 
 \todo[inline]{Nincs még kész.}
 
@@ -48,48 +51,58 @@ This paper details the mathematical description of the PMSM due to it's simplici
 \begin{itemize}
   \item The machine is symmetrical ($L_d = L_q$)
   \item The stator winding are in star connection
-  \item Losses are neglected (Ventillation, internal friction, iron losses)
-  \item Coil inductances and resistances are constant
+  \item Losses are neglected (Ventilation, internal friction, iron losses)
+  \item Coil inductance and resistances are constant
 \end{itemize}
+
+To derive the equations describing a PMSM machine, it worth to take a look on the external excitation DC machine, presented on Fig. \ref{fig:dc_machine}.
+
+\input{Figure/fig_includes/ext_dc_fig}
+
+From the equivalent circuit, Eq. \ref{eq:dc_dt} can be deducted. These Equations describing the relationship between the motor input voltage, current, torque and speed.
+
+\input{Equations/dc_motor_eq_dt}
+
+The electrical difference between the stator of a PMSM and a DC motor, the PMSM has a 3-phase winding with the spatial displacement of $\deg{120}$, connected in star. Each phase can modelled as a series RL and a voltage source. 
 
 \input{Figure/fig_includes/threephase_winding_fig}
 
+If there no alternative current conducting path, other than the three phase connection (No parasitic coupling or short to earth), the 3-phase current system is symmetrical, meaning $I_A + I_B + I_C = 0$, thus the current phasor can be described with two independent values instead of three. To utilize this simplification, the Clark transformation is utilised, presented on Eq. \ref{eq:clark}
+
 \input{Equations/clark}
+
+To get back the values in the original 3-phase reference frame, the Inverse-Clark transformation (Eq. \ref{eq:inv_clark}.) is used.
+
 \input{Equations/inverse_clark}
+
+
+
 \input{Equations/park}
 \input{Equations/inverse_park}
-\input{Equations/dc_motor_eq_dt}
+
 \input{Equations/dc_motor_eq_s}
 
 \input{Figure/fig_includes/motor_fig}
 
 \input{Figure/fig_includes/coord_fig}
 
+\input{Tables/motor_data_tab}
+
 \section{Bibliography}
 \label{sec:bib}
 
-You have to use the \verb|\makeAutBib| command for your
-bibliography. The input parameter of the command is the comma
-separated list of bib files without the extension. You can also find
-a sample bib file on the Workshop's web site where also the style
-file and this sample \LaTeX \ template are provided. You can cite
-any of the entries of the bib files for example ~\cite{ han00mining}
-or ~\cite{burdick01mafia}. The advantage of using bib files is that
-only those bibliographies will appear in the References section that
-are cited in the text \cite{proba}.
+\section{The Simulink Built-In implementation}
 
-If you have any question related to writing your \LaTeX \ paper
-please contact the chair of the conference(e-mail: aacs@aut.bme.hu).
+\section{The custom implementation}
 
-You can submit your paper via the web page of the conference. The
-submission of the papers will be opened soon.
+\section{Test Framework}
+
+\section{Result of comarsion}
+
 
 \section*{Acknowledgments}
- { \small The author would like to express his thanks to István Vajk~\footnote{Please mention the name of your advisor in the
-Acknowledgements section. } for his support as a scientific advisor.
-This work has been supported by the \dots \footnote{Please mention
-the institution or organization that has supported your research
-work.} }
+ { \small The author would like to express his thanks to Dr. István Varjasi for his support as a scientific advisor.
+This work has been supported by the Department of Automation and Applied Informatics}
 
 \makeAutBib{reni,itemsetmining}
 
