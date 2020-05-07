@@ -35,7 +35,11 @@ format)
 \section{Introduction}
 \label{sec:Introdu}
 
+Electrical drive development is one of the most significant area of the industry nowadays. Intelligent drive modules are penetrating the automotive industry day-by-day. In the traction systems scaling from small power, mild-hybrid applications, to multiple hundred $kW$ Battery Electric Vehicle\footnote{BEV} applications. Electrification is not only present in the drivetrains of the vehicles, but auxiliary devices are started to be electrified as well instead of the pneumatic or hydraulic energy source. Due to the limitations of nowadays battery technology efficiency of all these systems becomes essential factor, due to the direct effects on the vehicle's range.  The emerging number of wind-turbines and renewable energy sources, requires developments in the $MW$ range as well. The rapid development characterizes not just the electrical machines, but the controlling inverters and power conversion devices as well, demanding advancement from the semiconductors and the embedded computation units as well. With today's \emph{SiC} and \emph{GaN} semiconductors, switching frequencies in the $100\ kHz$ range becoming usual.
 
+
+
+The following chapters of this paper are organized as follows: \sectionname~\ref{sec:matPMSM} briefly introduce the modeling technique behind the PMSM machine and discusses the parameters of the example machine. \sectionname~\ref{sec:simulink_model} investigates the PMSM motor model available in MATLAB/Simulink (r2019b) SimScape Electrical toolbox. \sectionname~\ref{sec:custom_model} introduces the model solution implemented by the author. In \sectionname~\ref{sec:test_framework} the test environment and the test cases are introduced. The simulation results are summarized and evaluated in \sectionname~\ref{sec:results}. Finally, in \sectionname~\ref{sec:conclusion} the following steps will be introduced with a brief outlook to the author goals. 
 
 \todo[inline]{Nincs még kész.}
 
@@ -88,17 +92,24 @@ To get back the values in the original 3-phase reference frame, the Inverse-Clar
 
 \input{Tables/motor_data_tab}
 
-\section{Bibliography}
-\label{sec:bib}
+\section{The Simulink Built-In Implementation}
+\label{sec:simulink_model}
 
-\section{The Simulink Built-In implementation}
-
-\section{The custom implementation}
+\section{The Custom Implementation}
+\label{sec:custom_model}
 
 \section{Test Framework}
+\label{sec:test_framework}
 
-\section{Result of comarsion}
+\section{Result of Comparsion}
+\label{sec:results}
 
+\section{Conclusion}
+\label{sec:conclusion}
+
+
+\section{Bibliography}
+\label{sec:bib}
 
 \section*{Acknowledgments}
  { \small The author would like to express his thanks to Dr. István Varjasi for his support as a scientific advisor.
