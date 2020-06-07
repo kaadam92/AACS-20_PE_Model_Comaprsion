@@ -34,45 +34,39 @@ Simulation; PMSM; MATLAB; Real-Time AACS Workshop;
 \section{Introduction}
 \label{sec:Introdu}
 
-Electrical drive development is one of the most significant area of the industry nowadays. Intelligent drive modules are penetrating the automotive industry day-by-day. In the traction systems scaling from small power, mild-hybrid applications, to multiple hundred $kW$ Battery Electric Vehicle\footnote{BEV} applications. Electrification is not only present in the drivetrains of the vehicles, but auxiliary devices are started to be electrified as well instead of the pneumatic or hydraulic energy source. Due to the limitations of nowadays battery technology efficiency of all these systems becomes essential factor, due to the direct effects on the vehicle's range.  The emerging number of wind-turbines and renewable energy sources, requires developments in the $MW$ range as well. The rapid development characterizes not just the electrical machines, but the controlling inverters and power conversion devices as well, demanding advancement from the semiconductors and the embedded computation units as well. With today's \emph{SiC} and \emph{GaN} semiconductors, switching frequencies in the $100\ kHz$ range becoming usual.
+Electrical drive development is one of the most significant area of the industry nowadays. Intelligent drive modules are penetrating the automotive industry day-by-day. In the traction systems, scaling from small power mild-hybrid applications, to multiple hundred $kW$ Battery Electric Vehicle\footnote{BEV} applications can be seen. Electrification is not only present in the drivetrains of the vehicles, but auxiliary devices are started to be electrified as well, instead of the pneumatic or hydraulic energy source. Due to the limitations of nowadays battery technology efficiency of all these systems becomes essential factor, due to the direct effects on the vehicle's range.  The emerging number of wind-turbines and renewable energy sources, requires developments in the $MW$ range as well. The rapid development characterizes not just the electrical machines, but the controlling inverters and power conversion devices as well, demanding advancement from the semiconductors and the embedded computation units as well. With today's \emph{SiC} and \emph{GaN} semiconductors, switching frequencies in the $100\ kHz$ range becoming usual.
 
-The market and the competition demands fast, reliable and inexpensive development of new technologies. Development processes without simulation tools are not sustainable. Complex systems, like a vehicles drivetrain comes together with the interaction of multiple parts, like the battery or other power sources, the power converter and the control software inside it, the electrical machine, and the mechanical drivetrain behind that. These components cannot be handled independently, one design decision in on component can affect several others, the development of them has to be run simultaneously, as an iterative process. During the design off-line simulation tools are used in wide range. Mathematical modeling for control softwares and for electrical design. and FEM\footnote{Finite Element Model} for magnetic and mechanical design. In later stages, on-line simulation tools becomes important to validate and test each component and software before system integration.
+The market and the competition demands fast, reliable and inexpensive development of new technologies. Development processes without simulation tools are not sustainable anymore. Complex systems, like a vehicles drivetrain comes together with the interaction of multiple parts, like the battery or other power sources, the power converter and the control software inside it, the electrical machine, and finally the mechanical drivetrain. These components cannot be handled independently, one design decision in one component can affect several others, the development of them has to be run simultaneously, as an iterative process. During the design off-line simulation tools are used in wide range For example, mathematical modeling for control software and for electrical design and FEM\footnote{Finite Element Model} for magnetic and mechanical design. In later stages, on-line simulation tools are becoming important to validate and test each component and software before system integration.\cite{farkas01}\cite{buscayarol01}\cite{casestudy_volt}\cite{hwplatfromreview}
 
-HIL Simulators are widely used in control software development, especially in Power Electronics. The reliability and stability of the control structures and protection features are essential to be checked in a non-destructive environment. Testing on real hardware is usually expensive, can be destructive in case of unintended short-circuits and over currents. These faults in high power ranges can result in substantial material loss or even endangering human life. Signal level HIL simulators are simulating the environment for the control hardware, usually based on FPGA(s), providing a real-time test environment. These simulation environments are taking the controls signals from the ECU as their inputs and producing the proper feedback signals, whether they are digital or analogue. These environments can be completely transparent for the DUT\footnotes{Device Under Test}, and validations methods are available for them\change{Tamás cikkét be kell hivatkozni}.
+HIL Simulators are widely used in control software development, especially in Power Electronics. The reliability and stability of the control structures and protection features are essential to be checked in a non-destructive environment. Testing on real hardware is usually expensive, can be destructive in case of unintended short-circuits and over currents. These faults in high power ranges can result in substantial material loss or even endangering human life. Signal level HIL simulators are emulating the environment for the control hardware, usually based on FPGA(s), providing a real-time test environment. These simulation environments are taking the controls signals from the ECU as their inputs and producing the proper feedback signals, whether they are digital or analogue. These environments can be completely transparent for the DUT\footnotes{Device Under Test}, and validations methods are available for them. \cite{koki01} \cite{koki02}
 
-The author aiming to extend this approach to provide test environment for the Power Electronics as well, excluding only the mechanical and moving parts from the system. The added value lies within the opportunity to include the parasitic effects in the hardware design and the real control latencies of the sensors, testing also the thermal stability of the system. Emulating the rotating machine with an electrical unit removes the complexity and cost of coupling two electrical machines together, which are especially dangerous with high rotation speeds and large masses. The power efficiency is also good, the electrical power can be circulated within the system, only the losses have to fed in for external source. Efficiency and loss analysis can be conducted more detailed with the P-HIL approach as well. To be able to simulate the electrical machine for the DUT, conventional motor models with Voltage input, current and torque output are not comprehensive enough, more internal variables have to be available, like generated phase voltages. In this paper, a model meeting this goal is presented and validated with the motor model included in Matlab/Simulink.
+The author aiming to extend this approach to provide test environment for the power electronics hardware as well, excluding only the mechanical and moving parts from the system. The added value lies within the opportunity to include the parasitic effects in the hardware design and the real control latencies of the sensors, not to mention, testing the thermal stability of the system. Emulating the rotating machine with an electrical unit removes the complexity and cost of coupling two electrical machines together, which are especially dangerous with high rotation speeds and large masses. The power efficiency is also good, the electrical power can be circulated within the system, only the losses have to fed in from external source. Efficiency and loss analysis can be conducted more detailed with the P-HIL approach as well. To be able to simulate the electrical machine for the DUT, conventional motor models with Voltage input, current and torque output are not comprehensive enough, more internal variables have to be available, like generated phase voltages. In this paper, a model meeting this goal is presented and validated with the motor model included in MATLAB/Simulink.
 
 The following chapters of this paper are organized as follows: \sectionname~\ref{sec:matPMSM} briefly introduce the modeling technique behind the PMSM machine and discusses the parameters of the example machine. \sectionname~\ref{sec:simulink_model} investigates the PMSM motor model available in MATLAB/Simulink (r2019b) SimScape Electrical toolbox. \sectionname~\ref{sec:custom_model} introduces the model solution implemented by the author. In \sectionname~\ref{sec:test_framework} the test environment and the test cases are introduced. The simulation results are summarized and evaluated in \sectionname~\ref{sec:results}. Finally, in \sectionname~\ref{sec:conclusion} the following steps will be introduced with a brief outlook to the author goals. 
-
-\todo[inline]{Át kell még nézni.}
 
 \section{Mathematical model of a PMSM Machine}
 \label{sec:matPMSM}
 
-The Automotive industry always played a key role in innovation and always pioneered with new and emerging technologies. The situation is no different in the case of electrification nowadays. Electrical motors are the core element of modern hybrid (HEV) and Battery Electric Vehicle's (BEV) drivetrains. Volume and mass is a very limiting factor, especially in the case of BEV vehicles, because the saved mass and volume provides more space for the battery itself, providing higher range for the vehicle. Because of these reasons, 3-phase induction (IM\footnote{Induction Machine}) and PMSM\footnote{Permanent Magnet Synchronous Machine} machines are commonly used in traction (and other actuation) systems in the automotive industry. The difference between these two type of electrical machines is the source of the magnetic flux inside. In the case of the IM the magnetic field has to come from external excitation, in the PMSM machine, as the name suggests, the magnetic field is generated by the built-in permanent magnets. PMSM machines are especially superior in power density, however their drawback is the necessity of complex control algorithms and the expensive magnetic material.
+The Automotive industry always played a key role in innovation and always pioneered with new and emerging technologies. The situation is no different in the case of electrification nowadays. Electrical motors are the core element of modern hybrid (HEV) and Battery Electric Vehicle's (BEV) drivetrains. Volume and mass is a very limiting factor, especially in the case of BEV vehicles, because the saved mass and volume provides more space for the battery itself, providing higher range for the vehicle. Because of these reasons, 3-phase induction (IM\footnote{Induction Machine}) and PMSM\footnote{Permanent Magnet Synchronous Machine} machines are commonly used in traction (and other actuation) systems. The difference between these two type of electrical machines is the source of the magnetic flux inside. In the case of the IM the magnetic field has to come from external excitation, in case of the PMSM machine, as the name suggests, the magnetic field is generated by the built-in permanent magnets. PMSM machines are especially superior in power density, however their drawback is the necessity of complex control algorithms and the expensive magnetic material.
 
-There are multiple construction variables within the group of PMSM motors, these distinctions can affect the mathematical models as well. Regarding to the rotor configuration, one can differentiate between the \emph{non-salient pole} machines, and the \emph{salient pole} machines, showed on Figure \ref{fig:mot_sailient_non}
+There are multiple construction variables within the group of PMSM motors, these distinctions can affect the mathematical description as well. Regarding to the rotor configuration, one can differentiate between the \emph{non-salient pole} machines, and the \emph{salient pole} machines, showed on Figure \ref{fig:mot_sailient_non}
 
-The non-salient pole machines are usually equipped with surface mount magnets on their rotors. The simplicity of the manufacturing made the configuration popular. The air gap between the rotor and the stator is homogeneous, which means the inductance is not dependent on the rotor position, so  $L_d$ and the $Lq$ are equal. The magnets are more exposed to demagnetisation and in case of high speed rotors, the magnets can become loose due to the centripetal forces.
+The non-salient pole machines are usually equipped with surface mount magnets on their rotors. The simplicity of the manufacturing made the configuration popular. The air gap between the rotor and the stator is homogeneous, which means the inductance is not dependent on the rotor position, so  $L_d$ and the $Lq$ are equal. In the other hand, the magnets are more exposed to demagnetisation and in case of high speed rotors, the magnets can become loose due to the centripetal forces.
 
 \input{Figure/fig_includes/motor_fig}
 
-The \emph{salient pole} machines have their magnets embedded inside the material of the rotor, leading to a magnetic field which is not uniform in the air gap, meaning the inductance is depending from the rotor position, so $L_d\ \ne{}\ L_q$. The configuration have more complexity in production, however the rotor has superior mechanical integrity over the surface mount magnet type. The ratio of the $L_d$ and $L_q$ inductances can be set by the angles of the magnets. Sensorless motor control algorithms are simpler and more robust with salient pole machines.
+The \emph{salient pole} machines have their magnets embedded inside the material of the rotor, leading to a magnetic field which is not uniform in the air gap, meaning the inductance is dependent from the rotor position, so $L_d\ \ne{}\ L_q$. The configuration have more complexity in production, however the rotor has superior mechanical integrity over the surface mount magnet type. The ratio of the $L_d$ and $L_q$ inductances can be set by the angles of the magnets. Sensorless motor control algorithms are simpler and more robust with salient pole machines.
 
-Other differentiate is the shape of the Back-EMF voltage, which is dependent on the spatial configuration of the stator windings. There are machines with sinusoidal electromotive force profile, and there are machines with trapezoidal EMF profile. \unsure{Itt talán még van tér a fejlődésre, vagy ki kell hagyni teljesen.}
-
-\info[inline]{Itt még be kell hivatkozni Veszprémi könyvét meg írni arról, hogy miért király a PMSM!}
-
+Other differentiate is the shape of the Back-EMF voltage, which is dependent on the spatial configuration of the stator windings. There are machines with sinusoidal electromotive force profile, and there are machines with trapezoidal EMF profile. \cite{veszpremi} \cite{springer_ac_drives}
 
 This paper details the mathematical description of the PMSM due to it's simplicity, with the following assumptions:
 \begin{itemize}
   \item The machine is symmetrical, non-salient pole. ($L_d = L_q$)
-  \item The stator winding are in star connection
   \item Losses are neglected (Ventilation, internal friction, iron losses)
   \item Coil inductance and resistances are constant
 \end{itemize}
 
-To derive the equations describing a PMSM machine, it worth to take a look on the external excitation DC machine, presented on Fig. \ref{fig:dc_machine}.
+To derive the equations describing a PMSM machine, it worth to take a look on the external excitation DC machine, presented on Fig. \ref{fig:dc_machine}..
 
 \input{Figure/fig_includes/ext_dc_fig}
 
@@ -80,7 +74,7 @@ From the equivalent circuit, Eq. \ref{eq:dc_dt} can be deducted. These Equations
 
 \input{Equations/dc_motor_eq_dt}
 
-The electrical difference between the stator of a PMSM and a DC motor, the PMSM has a 3-phase winding with the spatial displacement of $\deg{120}$, connected in star. Each phase can modelled as a series RL and a voltage source. 
+The electrical difference between the stator of a PMSM and a DC motor, the PMSM has a 3-phase winding with the spatial displacement of $120^{\circ}$, connected in star. Each phase can modelled as a series RL and a voltage source. 
 
 \input{Figure/fig_includes/threephase_winding_fig}
 
@@ -88,35 +82,46 @@ If there no alternative current conducting path, other than the three phase conn
 
 \input{Equations/clark}
 
-To get back the values in the original 3-phase reference frame, the Inverse-Clark transformation (Eq. \ref{eq:inv_clark}.) is used.
-
-\input{Equations/inverse_clark}
 
 Parameters and variables van be dependent on the angular position of the rotor, which can lead to numerically complexity. One can transform the equations from the $\alpha\beta$ reference frame, tied to the stator. to a rotating reference frame, tied to the rotor, the so called $dq$ reference frame. By doing this, the motor equations becomes independent from the position of the rotor, enclosing the trigonometric calculations inside the transformation. The transformation from the $\alpha{}\beta{}$ to the $dq$ reference frame is called the Park transformation, described in Eq. \ref{eq:clark}.
 
 \input{Equations/park}
 
-The transformation used to calculate the valued and equations within the $\alpha{}\beta{}$ reference frame from the $dq$ reference frame is the Inverse-Clark transformation, described in Eq. \ref{eq:inv_clark}. 
-
-\input{Equations/inverse_park}
-
-The Clark and the Inverse-Clarke transformation can be used equivalently with changing the direction of the rotation angle.
-
 \input{Figure/fig_includes/coord_fig}
 
-In the $dq$ reference frame the equivalent circuit model of a PMSM machine looks the following:
+The equation describing the electrical and mechanical behavior of the motor are presented in Eq. \ref{eq:custom_motor_elec} and \ref{eq:custom_motor_mech}.
 
-\todo[inline]{Ábra a PMSM helyettesítő képről}
+\begin{equation}
+\begin{aligned}
+\label{eq:custom_motor_elec}
+    u_d &= R_si_d + L_d\frac{di_d}{dt}-N\omega{}(i_qL_q + \psi_m) \\
+    u_q &= R_si_q + L_q\frac{di_q}{dt}+N\omega{}(i_qL_q) \\
+\end{aligned}
+\end{equation}
 
-The equation describing the electrical and mechanical behavior of the motor are presented in...
+The mechanical torque is calculated as follows:
 
-\todo[inline]{Motor egyenelneltek}
+\begin{equation}
+\label{eq:custom_motor_mech}
+    T = \frac{3}{2}N((I_dI_q(L_d-L_q))+\psi_mI_q) \\
+\end{equation}
+
+The Simulink model were created based on the presented equations, with the coordinate transformations included. The model is extended with the calculation of the internal EMF voltage, excluding the part which is on $R_s$ in the equivalent circuit.
+
+\begin{equation}
+\begin{aligned}
+\label{eq:custom_motor_elec}
+    u_d_{EMF} &= R_si_d  \\
+    u_q_{EMF} &= R_si_q + N\omega{}\psi_m \\
+\end{aligned}
+\end{equation}
 
 Key parameters of the simulated motor in this paper can be found in \ref{tab:machine}.
 
 \input{Tables/motor_data_tab}
 
 The parameters were chosen to suit the Invert which will be used during the measurements. This is a 2-level, 3-phase inverter with $140\ kW$ electrical power. Due to the low switching frequency, the external coupling inductance will be selected to meet the motor inductance, and the role of the inverter will be to simulate the motor Back-EMF voltage, in the upcoming work of the author.
+
 \section{The Simulink Built-In Implementation}
 \label{sec:simulink_model}
 
@@ -124,9 +129,9 @@ MATLAB/Simulink is one of the most popular computation and numerical modelling t
 
 \input{Figure/fig_includes/simulink_motor_icon}
 
-On the input side, it has two electrical conserving ports, one marked with $~$, representing the three-phase input connection and one marked with $n$, representing the neutral point connection, which is necessary to close the electrical circuit for the zero order current components. On the output side, it has two mechanical conserving ports, one marked with $R$, representing the rotor of the motor, and on marked with $C$, representing the case of the motor.
+On the input side, it has two electrical conserving ports, one marked with $\sim$, representing the three-phase input connection and one marked with $n$, representing the neutral point connection, which is necessary to close the electrical circuit for the zero order current components. On the output side, it has two mechanical conserving ports, one marked with $R$, representing the rotor of the motor, and on marked with $C$, representing the case of the motor.\cite{matlab}
 
-The winding configuration of the motor is configurable between star and delta configuration. Avaliable, user configurable electrical parameters parameters are the following:
+The winding configuration of the motor is configurable between star and delta. Available, user configurable electrical parameters parameters are the following:
 \begin{itemize}
     \item Number of pole pairs
     \item Permanent magnet flux linkage
@@ -143,14 +148,16 @@ Mechanical parameters can be set for the specific application as well:
     \item Rotor damping
 \end{itemize}
 
-Unfortunately the implementation of the internal model is hidden from the user, the documentation describes the equations behind the model. The equtions are also in $dq$ reference frame, and presented in Eq. \ref{eq:matlab_motor}
+Unfortunately the implementation of the internal model is hidden from the user, the documentation describes the equations behind the model. The equations are also in $dq$ reference frame, and presented in Eq. \ref{eq:matlab_motor_elec}
 
-\begin{align*}
+\begin{equation}
+\begin{aligned}
 \label{eq:matlab_motor_elec}
     v_d &= R_si_d + L_d\frac{di_d}{dt}-N\omega{}i_qL_q \\
     v_q &= R_si_q + L_q\frac{di_q}{dt}+N\omega{}(i_qL_q+\psi_m) \\
     v_0 &= R_si_0 + L_0\frac{di_0}{dt}
-\end{align*}
+\end{aligned}
+\end{equation}
 
 The mechanical torque is calculated as follows:
 
@@ -165,37 +172,51 @@ It can be seen that the internal EMF voltages are not accessible for the user. T
 \section{The Custom Implementation}
 \label{sec:custom_model}
 
-The motor model implemented by the author is also made in MATLAB/Simulink, but not with the Simscape Electrical toolbox, only with ordinary differential equations. The mathematical description meets the presented equations in \sectionname~\ref{sec:matPMSM}.
+The motor model implemented by the author is also made in MATLAB/Simulink, but without the Simscape Electrical toolbox, only with ordinary differential equations. The mathematical description meets the presented equations in \sectionname~\ref{sec:matPMSM}.
+
+
+The custom model capable to output the generated three-phase back EMF voltage, which can be used as the reference signal of the P-HIL inverter in the future work. The model in it's current form can't handle magnetic non linearity and thermal effects. 
 
 \section{Test Framework}
 \label{sec:test_framework}
+The custom implemented model was validated against the model implemented in MATLAB/Simuink with a simulated inverter. The inverter output signals were connected to both motor models, bot the feedback signal is only taken from the custom implemented model. This way the transient response can be compared but the open loop running of the reference model will lead to desynchronisation eventually. The test setup is presented on Fig. \ref{fig:test_setup}..
+\input{Figure/fig_includes/test_setup}
 
 
 
 \section{Result of Comparison}
 \label{sec:results}
-
+First, the transient response was tested with a 200 A step. The first $10\ ms$ is plotted on Fig. \ref{fig:Transient_currents}. Both of the models showing the expected results, reaching the $200\ A$ peak at $~0.85\ ms$. The current ripple is also the same as expected.
 
 \input{Figure/fig_includes/transient_currents}
+
+The error signal is not plotted, the error is below $10^{-6} A$ in the whole run, which can be considered as numerical error. The torque can be calculated from the currents of the machine as stated in the equations before, therefore the if the torque waveform are looking similar between the custom implementation and the reference model, the torque calculation is validated as well. The comparison between the two torque signals can be found on Fig. \ref{fig:Transient_torque}.
+
 \input{Figure/fig_includes/transient_torques}
 
-
+After the transient validation it makes sense to test the machine dynamics. Both machines are running without load ($M_{load}=0$), therefore the produced torque only accelerating the motors internal inertia. Figure \ref{fig:speedramp_currents}. showing the waveform of both models of the currents when the machine was accelerated to $500\ rpm$ in the positive direction and after $0.45\ s$ it started to decelerate to $0\ rpm$ and accelerate to $500\ rpm$ in the other direction. The whole simulation is $1.5\ s$ long, containing a direction change.
 
 \input{Figure/fig_includes/speedramp_currents}
 
+It can be seen the waveforms are looking as expected. The error signal is plotted this time, showing the continuous growth in time. The speed and position of the machines are also plotted on Fig. \ref{fig:speedramp_speed}.. The wawefroms are looking the same, meaning the mechanical behavior of the machine models are also identical.
+
 \input{Figure/fig_includes/speed_and_pos}
+
+It must be stated, the custom implemented model have less functionality in the case of nonlinear behaviors or asymmetric magnetic characteristics, but it has the Back-EMF voltage as output as well. These drwaback have to be adressed later on.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
+It was shown that the presented PMSM motor model provides similar results than the model available in MATLAB/Simulink 2019b Simscape Electrical Toolbox. Further investigations will be concluded on physical machine and real-world measurement. The implemented model also offers the opportunity to use it as a reference signal source for the Power-HIL inverter in motor emulation mode. The author investigates the feasibility of the P-HIL application based on this model in his upcoming work. 
 
-\section{Bibliography}
-\label{sec:bib}
+
 
 \section*{Acknowledgments}
  { \small The author would like to express his thanks to Dr. István Varjasi for his support as a scientific advisor.
 This work has been supported by the Department of Automation and Applied Informatics}
 
+\section{Bibliography}
+\label{sec:bib}
 \makeAutBib{reni,itemsetmining}
 
 \end{document}
